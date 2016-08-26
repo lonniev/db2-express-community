@@ -15,9 +15,7 @@ archives = [
     :firstName => node['db2-express-community']['firstName'],
     :lastName => node['db2-express-community']['lastName'],
     :company => node['db2-express-community']['company'],
-    :countryCode => node['db2-express-community']['countryCode'],
-
-    :zipname => "v11.1_linuxx64_expc.tar.gz"
+    :countryCode => node['db2-express-community']['countryCode']
   }
 ]
 

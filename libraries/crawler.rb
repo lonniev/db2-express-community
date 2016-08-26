@@ -59,7 +59,7 @@ class Chef::Recipe::Crawler
 
             # interactively, the download would begin automatically. Here, though, we
             # only want to return the matching Mechanize Link instance
-            link = page.link_with( :href => Regexp.new( entry[:zipname] ) ) unless !page
+            link = page.link_with( :href => Regexp.new( entry[:remote_archive] ) ) unless !page
           end
         end
       }.compact!
