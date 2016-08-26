@@ -11,11 +11,13 @@ archives = [
   {
     :url => "#{node['db2-express-community']['ibm_marketing_site']}/pick.do?source=swg-db2expressc&S_PKG=dllinux64&S_TACT=000000VR&lang=en_US&S_OFF_CD=10000761",
     :remote_archive => node['db2-express-community']['remote_archive'],
-    :userEmail=> node['db2-express-community']['jazz_user'],
-    :firstName=> node['db2-express-community']['firstName'],
-    :lastName=> node['db2-express-community']['lastName'],
-    :company=> node['db2-express-community']['company'],
-    :countryCode=> node['db2-express-community']['countryCode'],
+    :userEmail => node['db2-express-community']['jazz_user'],
+    :firstName => node['db2-express-community']['firstName'],
+    :lastName => node['db2-express-community']['lastName'],
+    :company => node['db2-express-community']['company'],
+    :countryCode => node['db2-express-community']['countryCode'],
+
+    :zipname => "v11.1_linuxx64_expc.tar.gz"
   }
 ]
 
@@ -41,7 +43,7 @@ remote_file node['db2-express-community']['local_archive'] do
   owner "vagrant"
   group "vagrant"
 
-  only_if { download_urls[0].respond_to?( :uri ) }
+  only_if { download_urls && download_urls[0]&.respond_to?( :uri ) }
 end
 
 bash 'extract_module' do
