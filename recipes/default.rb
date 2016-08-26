@@ -41,7 +41,7 @@ remote_file node['db2-express-community']['local_archive'] do
   owner "vagrant"
   group "vagrant"
 
-  only_if { download_urls && download_urls[0]&.respond_to?( :uri ) }
+  only_if { download_urls && download_urls[0] && download_urls[0].respond_to?( :uri ) }
 end
 
 bash 'extract_module' do
