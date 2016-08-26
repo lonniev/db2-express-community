@@ -13,8 +13,8 @@ archives = [
     :remote_archive => node['db2-express-community']['remote_archive'],
     :userEmail=> node['db2-express-community']['jazz_user'],
     :firstName=> node['db2-express-community']['firstName'],
-    :lastName=> node['db2-express-community']['lastName'],,
-    :company=> node['db2-express-community']['company'],,
+    :lastName=> node['db2-express-community']['lastName'],
+    :company=> node['db2-express-community']['company'],
     :countryCode=> node['db2-express-community']['countryCode'],
   }
 ]
