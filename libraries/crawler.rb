@@ -17,6 +17,8 @@ class Chef::Recipe::Crawler
       # map each zipname into a IBM-token-credentialed URL to download the named file and return that mapped array of links
       archiveSet.map { |entry|
 
+        Chef::Log.warn( "Retrieving URL for #{entry}." )
+        
         page = agent.get( entry[:url] )
 
         # the client will be challenged to login with a Contact Form
@@ -44,7 +46,7 @@ class Chef::Recipe::Crawler
 
           page = form.submit
 
-          form = page.form_with( "downloadForm" )
+          form = page.form_with( "downloadForm" ) unless !page
 
           if ( form )
 
