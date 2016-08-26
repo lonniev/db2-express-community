@@ -5,6 +5,8 @@ default['db2-express-community'] =
   'jazz_user' => "customer@company.com",
   'firstName' => "First",
   'lastName' => "Last",
+  'company' => "Acme",
+  'countryCode' => "US",
   'local_archive' => 'DB2ExpressC11_linux_x64.tgz',
   'sha256' => 'f8592a47f2dfc2207f4ac3b7fd519cb3a15a4db5b4aaf1f69817d309f6c6ce1f',
 
