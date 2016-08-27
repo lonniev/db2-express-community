@@ -54,5 +54,5 @@ bash 'extract_module' do
     mkdir -p #{installPath}
     tar xzf #{localTmp.join( node['db2-express-community']['local_archive'] )} -C #{installPath}
     EOH
-  not_if { localExtract.exists? }
+  not_if { localExtract.exist? }
 end
