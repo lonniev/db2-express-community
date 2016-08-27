@@ -25,13 +25,14 @@ include_recipe 'mechanize'
 download_urls = Crawler.download_links( archives )
 
 # download the DB2 remote archive
-localTmp = Pathname( '/tmp' );
-installPath = Pathname( node['db2-express-community']['extract_path'] )
-localExtract = installPath.join( node['db2-express-community']['local_archive'] )
+localTmp = Pathname( node['db2-express-community']['download_into_path'] );
+installPath = Pathname( node['db2-express-community']['install_into_path'] )
+localExtract = localTmp.join( node['db2-express-community']['local_archive'] )
+installedFile = installPath.join( 'foo' )
 
 remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || ""
 
-remote_file node['db2-express-community']['local_archive'] do
+remote_file localExtract.to_s do
 
   action :create_if_missing
 
@@ -48,11 +49,9 @@ end
 
 bash 'extract_module' do
 
-  cwd localTmp.to_s
-
   code <<-EOH
     mkdir -p #{installPath}
-    tar xzf #{localTmp.join( node['db2-express-community']['local_archive'] )} -C #{installPath}
+    tar xzf #{localExtract} -C #{installPath}
     EOH
-  not_if { localExtract.exist? }
+  not_if { installedFile.exist? }
 end
