@@ -29,8 +29,6 @@ localTmp = Pathname( '/tmp' );
 installPath = Pathname( node['db2-express-community']['extract_path'] )
 localExtract = installPath.join( node['db2-express-community']['local_archive'] )
 
-Chef::Log.warn( "Found URLs #{download_urls}." )
-
 remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || ""
 
 remote_file node['db2-express-community']['local_archive'] do

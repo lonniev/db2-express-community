@@ -66,7 +66,7 @@ class Chef::Recipe::Crawler
         end
       }.flatten.compact.select{ |l| l.respond_to?( :uri ) }
 
-      links.push( discovered )
+      links.concat( discovered )
     end
   end
 end
