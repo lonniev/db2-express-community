@@ -22,12 +22,14 @@ archives = [
 # obtain the source URLs for the three zips
 include_recipe 'mechanize'
 
-download_urls = Crawler.download_links( archives )
+download_urls = Array.new() << Crawler.download_links( archives )
 
 # download the DB2 remote archive
 localTmp = Pathname( '/tmp' );
 installPath = Pathname( node['db2-express-community']['extract_path'] )
 localExtract = installPath.join( node['db2-express-community']['local_archive'] )
+
+remoteUrl = download_urls.select{ |u| u.respond_to?( :uri ) }.first
 
 remote_file node['db2-express-community']['local_archive'] do
 
