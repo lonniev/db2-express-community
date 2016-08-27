@@ -29,7 +29,7 @@ localTmp = Pathname( '/tmp' );
 installPath = Pathname( node['db2-express-community']['extract_path'] )
 localExtract = installPath.join( node['db2-express-community']['local_archive'] )
 
-remoteUrl = ( download_urls.first.to_s unless download_urls.empty? ) || ""
+remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || ""
 
 remote_file node['db2-express-community']['local_archive'] do
 
