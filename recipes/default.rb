@@ -22,20 +22,20 @@ archives = [
 # obtain the source URLs for the three zips
 include_recipe 'mechanize'
 
-download_urls = Array.new() << Crawler.download_links( archives )
+download_urls = Crawler.download_links( archives )
 
 # download the DB2 remote archive
 localTmp = Pathname( '/tmp' );
 installPath = Pathname( node['db2-express-community']['extract_path'] )
 localExtract = installPath.join( node['db2-express-community']['local_archive'] )
 
-remoteUrl = download_urls.select{ |u| u.respond_to?( :uri ) }.first
+remoteUrl = ( download_urls.first.to_s unless download_urls.empty? ) || ""
 
 remote_file node['db2-express-community']['local_archive'] do
 
   action :create_if_missing
 
-  source download_urls[0].uri().to_s
+  source remoteUrl
   path localTmp.to_s
 
   checksum node['db2-express-community']['sha256']
@@ -43,7 +43,7 @@ remote_file node['db2-express-community']['local_archive'] do
   owner "vagrant"
   group "vagrant"
 
-  only_if { download_urls && download_urls[0] && download_urls[0].respond_to?( :uri ) }
+  not_if { remoteUrl.empty? }
 end
 
 bash 'extract_module' do

@@ -15,6 +15,7 @@ class Chef::Recipe::Crawler
       }
 
       # at least return an empty collection
+      # (any non-empty collection returned will also only have elements that respond_to uri() )
       links = Array.new();
 
       # map each zipname into a IBM-token-credentialed URL to download the named file and return that mapped array of links
@@ -67,7 +68,7 @@ class Chef::Recipe::Crawler
             link = page.link_with( :href => Regexp.new( entry[:remote_archive] ) ) unless !page
           end
         end
-      }.compact
+      }.compact.select{ |l| l.respond_to?( :uri ) }
     end
   end
 end
