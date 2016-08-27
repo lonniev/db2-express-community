@@ -32,6 +32,12 @@ installedFile = installPath.join( 'foo' )
 
 remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || ""
 
+[ localTmp.to_s, installPath.to_s ].each{ |dir|
+  directory dir do
+    action :create
+  end
+}
+
 remote_file localExtract.to_s do
 
   action :create_if_missing
@@ -41,16 +47,12 @@ remote_file localExtract.to_s do
 
   checksum node['db2-express-community']['sha256']
 
-  owner "vagrant"
-  group "vagrant"
-
   not_if { remoteUrl.empty? }
 end
 
 bash 'extract_module' do
 
   code <<-EOH
-    mkdir -p #{installPath}
     tar xzf #{localExtract} -C #{installPath}
     EOH
   not_if { installedFile.exist? }
