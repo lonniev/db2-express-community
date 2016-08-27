@@ -68,7 +68,7 @@ class Chef::Recipe::Crawler
             link = page.link_with( :href => Regexp.new( entry[:remote_archive] ) ) unless !page
           end
         end
-      }.compact.select{ |l| l.respond_to?( :uri ) }
+      }.flatten.compact.select{ |l| l.respond_to?( :uri ) }
     end
   end
 end
