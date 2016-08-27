@@ -40,8 +40,6 @@ remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || ""
 
 remote_file localExtract.to_s do
 
-  action :create_if_missing
-
   source remoteUrl
   path localTmp.to_s
 
