@@ -41,7 +41,6 @@ remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || ""
 remote_file localExtract.to_s do
 
   source remoteUrl
-  path localTmp.to_s
 
   checksum node['db2-express-community']['sha256']
 
