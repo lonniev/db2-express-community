@@ -49,11 +49,11 @@ remote_file localExtract.to_s do
   not_if { remoteUrl.empty? }
 end
 
-bash 'extract_module' do
+tarball localExtract.to_s do
+  
+  destination installPath.to_s
 
-  code <<-EOH
-    tar xzf #{localExtract} -C #{installPath}
-    EOH
+  action :extract
 
   only_if { !remoteUrl.empty? }
   not_if { installedFile.exist? }
