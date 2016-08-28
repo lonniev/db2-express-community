@@ -4,7 +4,7 @@ maintainer_email 'lonniev@gmail.com'
 license          'All rights reserved'
 description      'Installs/Configures db2-express-community'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.1.22'
+version          '0.1.24'
 
 depends 'mechanize'
 depends 'tarball'

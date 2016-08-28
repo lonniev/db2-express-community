@@ -7,6 +7,17 @@
 # All rights reserved - Do Not Redistribute
 #
 
+# 64-bit DB2 needs some 32-bit crutches
+apt_package [ 'libpam0g:i386', 'libaio1' ]
+
+# create users as specified in the bags
+include_recipe "manage-users"
+
+# key DB2 users that are needed for the response file and should be in the bags files
+db2inst1UserName = node['db2-express-community']['db2inst1UserName']
+db2sdfe1UserName = node['db2-express-community']['db2sdfe1UserName']
+
+# specify which DB2 URL to use
 archives = [
   {
     :url => "#{node['db2-express-community']['ibmMarketingSite']}/pick.do?source=swg-db2expressc&S_PKG=dllinux64&S_TACT=000000VR&lang=en_US&S_OFF_CD=10000761",
@@ -71,7 +82,10 @@ template responseFile.to_s do
   variables(
     versionedInstallPath: "#{versionedInstallPath}",
     installType: "#{node['db2-express-community']['installType']}",
-    db2Password: "#{node['db2-express-community']['db2Password']}"
+    db2inst1UserName: "#{db2inst1UserName}",
+    db2inst1PlainPassword: "#{db2inst1PlainPassword}",
+    db2sdfe1UserName: "#{db2sdfe1UserName}",
+    db2sdfe1PlainPassword: "#{db2sdfe1PlainPassword}"
   )
 
   owner 'root'
