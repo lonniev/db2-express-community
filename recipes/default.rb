@@ -28,7 +28,7 @@ download_urls = Crawler.download_links( archives )
 localTmp = Pathname( node['db2-express-community']['download_into_path'] );
 installPath = Pathname( node['db2-express-community']['install_into_path'] )
 localExtract = localTmp.join( node['db2-express-community']['local_archive'] )
-installedFile = installPath.join( 'foo' )
+installedFile = installPath.join( 'expc/db2_install' )
 
 remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || ""
 
@@ -44,6 +44,8 @@ remote_file localExtract.to_s do
 
   checksum node['db2-express-community']['sha256']
 
+  action :create_if_missing
+
   not_if { remoteUrl.empty? }
 end
 
@@ -52,5 +54,7 @@ bash 'extract_module' do
   code <<-EOH
     tar xzf #{localExtract} -C #{installPath}
     EOH
+
+  only_if { !remoteUrl.empty? }
   not_if { installedFile.exist? }
 end
