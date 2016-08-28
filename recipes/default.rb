@@ -34,6 +34,7 @@ remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || ""
 [ localTmp.to_s, stagingPath.to_s ].each{ |dir|
   directory dir do
     action :create
+    recursive true
   end
 }
 
