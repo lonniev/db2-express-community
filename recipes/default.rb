@@ -25,7 +25,7 @@ download_urls = Crawler.download_links( archives )
 
 localTmp = Pathname( node['db2-express-community']['downloadIntoPath'] );
 stagingPath = Pathname( node['db2-express-community']['stagingIntoPath'] )
-versionedInstallPath = Pathname( node['db2-express-community']['installPath'] )
+versionedInstallPath = Pathname( node['db2-express-community']['versionedInstallPath'] )
 localExtract = localTmp.join( node['db2-express-community']['localArchive'] )
 stagingFileCheck = stagingPath.join( 'expc/db2_install' )
 
@@ -60,7 +60,7 @@ tarball localExtract.to_s do
   not_if { stagingFileCheck.exist? }
 end
 
-responseFile = stagingPath.join( "expc" ).join( node['db2-express-community']['db2ResponseFile'] )
+responseFile = stagingPath.join( node['db2-express-community']['db2ResponseFile'] )
 
 # construct a DB2 setup Response File
 template responseFile.to_s do
