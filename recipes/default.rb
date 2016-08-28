@@ -9,9 +9,9 @@
 
 archives = [
   {
-    :url => "#{node['db2-express-community']['ibm_marketing_site']}/pick.do?source=swg-db2expressc&S_PKG=dllinux64&S_TACT=000000VR&lang=en_US&S_OFF_CD=10000761",
-    :remote_archive => node['db2-express-community']['remote_archive'],
-    :userEmail => node['db2-express-community']['jazz_user'],
+    :url => "#{node['db2-express-community']['ibmMarketingSite']}/pick.do?source=swg-db2expressc&S_PKG=dllinux64&S_TACT=000000VR&lang=en_US&S_OFF_CD=10000761",
+    :remoteArchive => node['db2-express-community']['remoteArchive'],
+    :userEmail => node['db2-express-community']['ibmCustomerEmail'],
     :firstName => node['db2-express-community']['firstName'],
     :lastName => node['db2-express-community']['lastName'],
     :company => node['db2-express-community']['company'],
@@ -19,25 +19,25 @@ archives = [
   }
 ]
 
-# obtain the source URLs for the three zips
+# browse the IBM marketing site and collect a credentialed URL for the download
 include_recipe 'mechanize'
-
 download_urls = Crawler.download_links( archives )
 
-# download the DB2 remote archive
-localTmp = Pathname( node['db2-express-community']['download_into_path'] );
-installPath = Pathname( node['db2-express-community']['install_into_path'] )
-localExtract = localTmp.join( node['db2-express-community']['local_archive'] )
-installedFile = installPath.join( 'expc/db2_install' )
+localTmp = Pathname( node['db2-express-community']['downloadIntoPath'] );
+stagingPath = Pathname( node['db2-express-community']['stagingIntoPath'] )
+versionedInstallPath = Pathname( node['db2-express-community']['installPath'] )
+localExtract = localTmp.join( node['db2-express-community']['localArchive'] )
+stagingFileCheck = stagingPath.join( 'expc/db2_install' )
 
 remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || ""
 
-[ localTmp.to_s, installPath.to_s ].each{ |dir|
+[ localTmp.to_s, stagingPath.to_s ].each{ |dir|
   directory dir do
     action :create
   end
 }
 
+# retrieve the db2-express-community archive from the IBM site
 remote_file localExtract.to_s do
 
   source remoteUrl
@@ -49,12 +49,39 @@ remote_file localExtract.to_s do
   not_if { remoteUrl.empty? }
 end
 
+# extract the tar into the staging area
 tarball localExtract.to_s do
-  
-  destination installPath.to_s
+
+  destination stagingPath.to_s
 
   action :extract
 
   only_if { !remoteUrl.empty? }
-  not_if { installedFile.exist? }
+  not_if { stagingFileCheck.exist? }
+end
+
+responseFile = stagingPath.join( "expc" ).join( node['db2-express-community']['db2ResponseFile'] )
+
+# construct a DB2 setup Response File
+template responseFile.to_s do
+
+  source 'db2ResponseFile.erb'
+
+  variables(
+    versionedInstallPath: "#{versionedInstallPath}",
+    installType: "#{node['db2-express-community']['installType']}",
+    db2Password: "#{node['db2-express-community']['db2Password']}"
+  )
+
+  owner 'root'
+  group 'root'
+  mode '0644'
+
+end
+
+# Install DB2 using the generated Response File
+execute 'install db2' do
+  command "#{stagingPath.join( 'expc' )}/db2setup -r #{responseFile}"
+  cwd stagingPath.to_s
+  action :run
 end

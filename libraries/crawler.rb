@@ -14,10 +14,6 @@ class Chef::Recipe::Crawler
         agent.pluggable_parser.default = Mechanize::Download
       }
 
-      # at least return an empty collection
-      # (any non-empty collection returned will also only have elements that respond_to uri() )
-      links = Array.new();
-
       # map each zipname into a IBM-token-credentialed URL to download the named file and return that mapped array of links
       discovered = archiveSet.map { |entry|
 
@@ -61,12 +57,14 @@ class Chef::Recipe::Crawler
 
             # interactively, the download would begin automatically. Here, though, we
             # only want to return the matching Mechanize Link instance
-            link = page.link_with( :href => Regexp.new( entry[:remote_archive] ) ) unless !page
+            link = page.link_with( :href => Regexp.new( entry[:remoteArchive] ) ) unless !page
           end
         end
       }.flatten.compact.select{ |l| l.respond_to?( :uri ) }
 
-      links.concat( discovered )
+      # at least return an empty collection
+      # (any non-empty collection returned will also only have elements that respond_to uri() )
+      Array.new().concat( discovered )
     end
   end
 end
