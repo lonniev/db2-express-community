@@ -14,6 +14,7 @@ default['db2-express-community'] =
   'stagingIntoPath' => '/tmp/IBM/db2Stage',
   'versionedInstallPath' => '/opt/IBM/db2/version',
   'installType' => 'TYPICAL',
+  'db2ResponseFile' => 'db2ResponseFileForYou',
 
   'db2Password' => 'db2admin'
 }
