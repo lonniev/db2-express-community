@@ -7,6 +7,9 @@
 # All rights reserved - Do Not Redistribute
 #
 
+# create users as specified in the bags
+include_recipe "sys::apt"
+
 # 64-bit DB2 needs some 32-bit crutches
 apt_package 'libaio1'
 apt_package 'libpam0g:i386'
