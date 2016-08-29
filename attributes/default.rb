@@ -16,5 +16,6 @@ default['db2-express-community'] =
   'installType' => 'TYPICAL',
   'db2ResponseFile' => 'db2ResponseFileForYou',
 
-  'db2Password' => 'db2admin'
+  'db2inst1UserName' => 'db2inst1',
+  'db2sdfe1UserName' => 'db2sdfe1'
 }
