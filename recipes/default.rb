@@ -7,6 +7,17 @@
 # All rights reserved - Do Not Redistribute
 #
 
+# Ubuntu and Canonical can't decide on Upstart or SystemD
+reboot "Restore Upstart" do
+  action :nothing
+  reason "DB2 assumes Linux still uses Upstart for Services"
+end
+
+apt_package 'upstart-sysv' do
+  not_if 'dpkg -s upstart-sysv'
+  notifies :reboot_now, 'reboot[Restore Upstart]', :immediately
+end
+
 # 64-bit DB2 needs some 32-bit crutches
 apt_package 'libaio1'
 apt_package 'gcc-multilib'
@@ -129,3 +140,6 @@ execute 'install db2' do
 
   only_if { responseFile.exist? }
 end
+
+# Autostart both the DB2 Fault Manager and the Installed instance
+execute "#{versionedInstallPath.join( 'bin' )}/db2iauto -on #{db2inst1UserName}"
