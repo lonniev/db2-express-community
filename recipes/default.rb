@@ -99,6 +99,7 @@ remote_file localExtract.to_s do
   action :create_if_missing
 
   not_if { remoteUrl.empty? }
+  
 end
 
 # extract the tar into the staging area
@@ -110,6 +111,7 @@ tarball localExtract.to_s do
 
   only_if { !remoteUrl.empty? }
   not_if { stagingFileCheck.exist? }
+
 end
 
 responseFile = stagingPath.join( node['db2-express-community']['db2ResponseFile'] )
@@ -138,12 +140,14 @@ end
 
 # Install DB2 using the generated Response File
 execute 'install db2' do
+
   command "#{stagingPath.join( 'expc' )}/db2setup -r #{responseFile}"
   cwd stagingPath.to_s
   action :run
 
   only_if { responseFile.exist? }
-  not_if '[[ `ps -eaf|grep -i db2sysc|wc -l` -gt 1 ]]'
+  not_if '[[ `ps -eaf|grep -i db2fmcd|wc -l` -gt 1 ]]'
+
 end
 
 # Autostart both the DB2 Fault Manager and the Installed instance

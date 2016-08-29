@@ -1,56 +1,67 @@
 # db2-express-community Cookbook
 
-TODO: Enter the cookbook description here.
+Prepares a Ubuntu Linux VM to support 64-bit DB2 and its Instance and Fenced Users.
 
-e.g.
-This cookbook makes your favorite breakfast sandwich.
+Visits the IBM Marketing Site to complete the Contact registration process in order to
+obtain a credentialed URL for the DB2 Express Community Edition installer.
+
+It then downloads and extracts that installer.
+
+It then prepares a DB2 silent install Response File.
+
+It installs DB2 Express Community Edition according to the Response File and starts it.
 
 ## Requirements
 
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
+### Databags
 
-e.g.
+- The recipe relies on public `users/userid.json` files for each of the DB2 instance users. The passwords for these users are stored in private_data_bag `userid.json` files that each have a public `id` property and an encrypted `db2Password` property.
+
 ### Platforms
 
-- SandwichOS
+- Ubuntu 64-bit (amd64)
 
 ### Chef
 
-- Chef 12.0 or later
+- Chef 12.10
 
 ### Cookbooks
 
-- `toaster` - db2-express-community needs toaster to brown your bagel.
+- `mechanize` - db2-express-community needs mechanize to crawl the IBM site.
+- `tarball` - db2-express-community uses tarball to unpack tgz files
+- `manage-users` - db2-express-community needs manage-users to create the Unix user accounts for the DB2 users and to provide the plaintext passwords to the DB2 Response File for these users.
 
 ## Attributes
 
-TODO: List your cookbook attributes here.
-
-e.g.
 ### db2-express-community::default
 
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['db2-express-community']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
+```json
+{
+  'remoteArchive' => "v11.1_linuxx64_expc.tar.gz",
+  'ibmMarketingSite' => "https://www-01.ibm.com/marketing/iwm/iwm/web",
+  'ibmCustomerEmail' => "customer@company.com",
+  'firstName' => "First",
+  'lastName' => "Last",
+  'company' => "Acme",
+  'countryCode' => "US",
+  'localArchive' => 'DB2ExpressC11_linux_x64.tgz',
+  'sha256' => 'f8592a47f2dfc2207f4ac3b7fd519cb3a15a4db5b4aaf1f69817d309f6c6ce1f',
+
+  'downloadIntoPath' => '/tmp',
+  'stagingIntoPath' => '/tmp/IBM/db2Stage',
+  'versionedInstallPath' => '/opt/IBM/db2/version',
+  'installType' => 'TYPICAL',
+  'db2ResponseFile' => 'db2ResponseFileForYou',
+
+  'db2inst1UserName' => 'db2inst1',
+  'db2sdfe1UserName' => 'db2sdfe1'
+}
+```
 
 ## Usage
 
 ### db2-express-community::default
 
-TODO: Write usage instructions for each cookbook.
-
-e.g.
 Just include `db2-express-community` in your node's `run_list`:
 
 ```json
@@ -62,19 +73,6 @@ Just include `db2-express-community` in your node's `run_list`:
 }
 ```
 
-## Contributing
+# License and Authors
 
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
-
-e.g.
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write your change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
-
-## License and Authors
-
-Authors: TODO: List authors
-
+Authors: Lonnie VanZandt
