@@ -15,15 +15,14 @@ begin
 
   apt_package 'libpam0g:i386'
 
-rescue
-  
+rescue Chef::Exceptions::Package
+
   reboot 'now' do
     action :nothing
     reason 'Must reboot after adding i386 architecture support'
   end
 
   execute 'dpkg --add-architecture i386' do
-    only_if { node['debian']['architecture'] == 'amd64' }
     notifies :reboot_now, 'reboot[now]', :immediately
   end
 end
