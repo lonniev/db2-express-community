@@ -188,7 +188,7 @@ DB2_INST.NAME             = <%= @db2inst1UserName %> ** e.g. db2inst1        ** 
 ** The UID will be generated if the keyword is not specified - highly
 ** recommended.
 *DB2_INST.UID             =                 ** Unsigned integer
-DB2_INST.GROUP_NAME       = db2iadm1        ** char(30) no spaces
+DB2_INST.GROUP_NAME       = <%= @db2inst1UserName %> ** e.g. db2iadm1        ** char(30) no spaces
 
 ** Use a generated GID if no value provided - highly recommended.
 *DB2_INST.GID             =                 ** Unsigned integer
@@ -223,7 +223,7 @@ DB2_INST.FENCED_USERNAME  = <%= @db2sdfe1UserName %> ** e.g. db2sdfe1        ** 
 ** If no value is provided for FENCED_UID keyword, the DB2 installer will
 ** generate one for you. This is highly recommended.
 *DB2_INST.FENCED_UID      =                 ** Unsigned integer
-DB2_INST.FENCED_GROUP_NAME = db2fsdm1       ** char(30)  no spaces
+DB2_INST.FENCED_GROUP_NAME = <%= @db2sdfe1UserName %> ** e.g. db2fsdm1       ** char(30)  no spaces
 
 ** If no value is provided for FENCED_GID keyword, the DB2 installer will
 ** generate one for you. This is highly recommended.
