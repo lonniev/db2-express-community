@@ -16,6 +16,25 @@ include_recipe "manage-users"
 # key DB2 users that are needed for the response file and should be in the bags files
 db2inst1UserName = node['db2-express-community']['db2inst1UserName']
 db2sdfe1UserName = node['db2-express-community']['db2sdfe1UserName']
+db2inst1PlainPassword = ""
+db2sdfe1PlainPassword = ""
+
+# search up the passwords for the specified users
+search( "users", "id:#{db2inst1UserName} AND NOT action:remove") do |usr|
+
+  keys = Chef::EncryptedDataBagItem.load( "private_keys", usr['id'] )
+
+  db2inst1PlainPassword = keys["db2Password"]
+
+end
+
+search( "users", "id:#{db2sdfe1UserName} AND NOT action:remove") do |usr|
+
+  keys = Chef::EncryptedDataBagItem.load( "private_keys", usr['id'] )
+
+  db2sdfe1PlainPassword = keys["db2Password"]
+
+end
 
 # specify which DB2 URL to use
 archives = [
@@ -92,6 +111,8 @@ template responseFile.to_s do
   group 'root'
   mode '0644'
 
+  not_if { db2inst1PlainPassword.empty? || db2sdfe1PlainPassword.empty? }
+
 end
 
 # Install DB2 using the generated Response File
@@ -99,4 +120,6 @@ execute 'install db2' do
   command "#{stagingPath.join( 'expc' )}/db2setup -r #{responseFile}"
   cwd stagingPath.to_s
   action :run
+
+  only_if { responseFile.exist? }
 end
