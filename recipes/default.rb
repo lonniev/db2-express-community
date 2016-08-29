@@ -12,6 +12,7 @@
 reboot "Restore Upstart" do
   action :nothing
   reason "DB2 assumes Linux still uses Upstart for Services"
+  delay_mins 1 # give chef time to return control to Vagrant
 end
 
 apt_package 'upstart-sysv' do
@@ -99,7 +100,7 @@ remote_file localExtract.to_s do
   action :create_if_missing
 
   not_if { remoteUrl.empty? }
-  
+
 end
 
 # extract the tar into the staging area
