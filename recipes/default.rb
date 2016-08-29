@@ -7,13 +7,26 @@
 # All rights reserved - Do Not Redistribute
 #
 
-# create users as specified in the bags
-include_recipe "sys::apt"
-
 # 64-bit DB2 needs some 32-bit crutches
 apt_package 'libaio1'
-apt_package 'libpam0g'
 apt_package 'gcc-multilib'
+
+begin
+
+  apt_package 'libpam0g:i386'
+
+rescue
+  
+  reboot 'now' do
+    action :nothing
+    reason 'Must reboot after adding i386 architecture support'
+  end
+
+  execute 'dpkg --add-architecture i386' do
+    only_if { node['debian']['architecture'] == 'amd64' }
+    notifies :reboot_now, 'reboot[now]', :immediately
+  end
+end
 
 # create users as specified in the bags
 include_recipe "manage-users"
