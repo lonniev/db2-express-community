@@ -11,21 +11,10 @@
 apt_package 'libaio1'
 apt_package 'gcc-multilib'
 
-begin
+execute 'dpkg --add-architecture i386'
+execute 'apt-get update'
 
-  apt_package 'libpam0g:i386'
-
-rescue Chef::Exceptions::Package
-
-  reboot 'now' do
-    action :nothing
-    reason 'Must reboot after adding i386 architecture support'
-  end
-
-  execute 'dpkg --add-architecture i386' do
-    notifies :reboot_now, 'reboot[now]', :immediately
-  end
-end
+apt_package 'libpam0g:i386'
 
 # create users as specified in the bags
 include_recipe "manage-users"
