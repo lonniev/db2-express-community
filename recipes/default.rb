@@ -2,9 +2,10 @@
 # Cookbook Name:: db2-express-community
 # Recipe:: default
 #
-# Copyright 2016, Predictable Response Consulting
+# "Creative Commons BY 2016", Predictable Response Consulting
+# "Creative Commons BY 2016", Sodius
 #
-# All rights reserved - Do Not Redistribute
+# See https://en.wikipedia.org/wiki/CC_BY
 #
 
 # Ubuntu and Canonical can't decide on Upstart or SystemD
@@ -26,6 +27,9 @@ execute 'dpkg --add-architecture i386'
 execute 'apt-get update'
 
 apt_package 'libpam0g:i386'
+
+# DB2 scripts use ksh
+apt_package 'ksh'
 
 # create users as specified in the bags
 include_recipe "manage-users"
@@ -139,6 +143,7 @@ execute 'install db2' do
   action :run
 
   only_if { responseFile.exist? }
+  not_if '[[ `ps -eaf|grep -i db2sysc|wc -l` -gt 1 ]]'
 end
 
 # Autostart both the DB2 Fault Manager and the Installed instance
