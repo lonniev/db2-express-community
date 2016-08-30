@@ -147,7 +147,7 @@ execute 'install db2' do
   action :run
 
   only_if { responseFile.exist? }
-  not_if '[[ `ps -eaf|grep -i db2fmcd|wc -l` -gt 1 ]]'
+  not_if 'service db2fmcd status' # true when db2fmcd is installed and running
 
 end
 
