@@ -81,7 +81,7 @@ versionedInstallPath = Pathname( node['db2-express-community']['versionedInstall
 localExtract = localTmp.join( node['db2-express-community']['localArchive'] )
 stagingFileCheck = stagingPath.join( 'expc/db2_install' )
 
-remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || ""
+remoteUrl = ( download_urls.first.uri().to_s unless download_urls.empty? ) || node['db2-express-community']['fallback']
 
 [ localTmp.to_s, stagingPath.to_s ].each{ |dir|
   directory dir do
