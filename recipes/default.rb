@@ -101,6 +101,8 @@ remote_file localExtract.to_s do
 
   not_if { remoteUrl.empty? }
 
+  only_if { !localExtract.exist? }
+
 end
 
 # extract the tar into the staging area
