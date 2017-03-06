@@ -9,16 +9,10 @@
 #
 
 # Ubuntu and Canonical can't decide on Upstart or SystemD
-reboot "Restore Upstart" do
-  action :nothing
-  reason "DB2 assumes Linux still uses Upstart for Services"
-  delay_mins 1 # give chef time to return control to Vagrant
-end
-
-apt_package 'upstart-sysv' do
-  not_if 'dpkg -s upstart-sysv'
-  notifies :reboot_now, 'reboot[Restore Upstart]', :immediately
-end
+# DB2 wants Upstart
+# Use linux-upstart and then a vagrant :reload provisioner 
+# before using this recipe. Otherwise a hard reboot is needed here
+# after installing the upstart-sysv apt_package
 
 # 64-bit DB2 needs some 32-bit crutches
 apt_package 'libaio1'
