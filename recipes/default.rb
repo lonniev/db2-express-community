@@ -103,7 +103,7 @@ end
 tar_extract localExtract.to_s do
   action :extract_local
   target_dir stagingPath.to_s
-  creates stagingPath.join( 'expc' )
+  creates stagingPath.join( 'expc' ).to_s
 
   only_if { !remoteUrl.empty? }
   not_if { stagingFileCheck.exist? }
