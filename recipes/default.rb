@@ -10,7 +10,7 @@
 
 # Ubuntu and Canonical can't decide on Upstart or SystemD
 # DB2 wants Upstart
-# Use linux-upstart and then a vagrant :reload provisioner 
+# Use linux-upstart and then a vagrant :reload provisioner
 # before using this recipe. Otherwise a hard reboot is needed here
 # after installing the upstart-sysv apt_package
 
@@ -100,11 +100,10 @@ remote_file localExtract.to_s do
 end
 
 # extract the tar into the staging area
-tarball localExtract.to_s do
-
-  destination stagingPath.to_s
-
-  action :extract
+tar_extract localExtract.to_s do
+  action :extract_local
+  target_dir stagingPath.to_s
+  creates stagingPath.join( 'expc' )
 
   only_if { !remoteUrl.empty? }
   not_if { stagingFileCheck.exist? }
